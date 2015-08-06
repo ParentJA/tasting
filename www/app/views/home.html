@@ -1,0 +1,8 @@
+<div class="middle-center">
+  <h1>Welcome to Tasting</h1>
+  <div ng-if="isUserAuthenticated()"></div>
+  <div ng-if="!isUserAuthenticated()">
+    <a class="btn btn-large btn-primary" ui-sref="log_in">Log in</a>
+    <a class="btn btn-large btn-primary" ui-sref="sign_up">Sign up</a>
+  </div>
+</div>

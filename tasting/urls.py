@@ -17,5 +17,6 @@ urlpatterns = [
     url(r'^api/v1/auth/login/$', LogInView.as_view(), name='login'),
     url(r'^api/v1/auth/logout/$', LogOutView.as_view(), name='logout'),
     url(r'^api/v1/accounts/', include('accounts.urls')),
+    url(r'^api/v1/events/', include('events.urls')),
     url(r'^admin/', include(admin.site.urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

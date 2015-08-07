@@ -1,16 +1,20 @@
 (function (window, angular, undefined) {
   "use strict";
 
-  function authenticationService($cookies, $state, Restangular) {
+  function authenticationService($http, $cookies, $state, BASE_URL) {
     this.signUp = function signUp(username, password, email, firstName, lastName) {
       var self = this;
 
-      return Restangular.all("accounts").post({
-        username: email,
-        password: password,
-        email: email,
-        first_name: firstName,
-        last_name: lastName
+      return $http({
+        method: "POST",
+        url: BASE_URL + "accounts/",
+        data: {
+          username: email,
+          password: password,
+          email: email,
+          first_name: firstName,
+          last_name: lastName
+        }
       }).then(onSignUpSuccess, onSignUpFailure);
 
       function onSignUpSuccess() {
@@ -25,9 +29,13 @@
     this.logIn = function logIn(username, password) {
       var self = this;
 
-      return Restangular.all("auth").all("login").post({
-        username: username,
-        password: password
+      return $http({
+        method: "POST",
+        url: BASE_URL + "auth/login/",
+        data: {
+          username: username,
+          password: password
+        }
       }).then(onLogInSuccess, onLogInFailure);
 
       function onLogInSuccess(data) {
@@ -44,7 +52,10 @@
     this.logOut = function logOut() {
       var self = this;
 
-      return Restangular.all("auth").all("logout").post().then(onLogOutSuccess, onLogOutFailure);
+      return $http({
+        method: "POST",
+        url: BASE_URL + "auth/logout/"
+      }).then(onLogOutSuccess, onLogOutFailure);
 
       function onLogOutSuccess() {
         self.unauthenticate();
@@ -78,7 +89,57 @@
     };
   }
 
+  function eventsService($http, BASE_URL) {
+    this.list = function list() {
+      var url = BASE_URL + "events/";
+
+      return $http({
+        method: "GET",
+        url: url
+      });
+    };
+
+    this.create = function create(data) {
+      var url = BASE_URL + "events/";
+
+      return $http({
+        method: "POST",
+        url: url,
+        data: data
+      });
+    };
+
+    this.retrieve = function retrieve(id) {
+      var url = BASE_URL + "events/" + id + "/";
+
+      return $http({
+        method: "GET",
+        url: url
+      });
+    };
+
+    this.update = function update(id, data) {
+      var url = BASE_URL + "events/" + id + "/";
+
+      return $http({
+        method: "PUT",
+        url: url,
+        data: data
+      });
+    };
+
+    this.destroy = function destroy(id) {
+      var url = BASE_URL + "events/" + id + "/";
+
+      return $http({
+        method: "DELETE",
+        url: url
+      });
+    };
+  }
+
   angular.module("app")
-    .service("authenticationService", ["$cookies", "$state", "Restangular", authenticationService]);
+    .service("authenticationService", ["$http", "$cookies", "$state", "BASE_URL", authenticationService])
+    .service("eventsService", ["$http", "BASE_URL", eventsService]);
 
 })(window, window.angular);

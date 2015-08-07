@@ -1,13 +1,9 @@
 (function (window, angular, undefined) {
   "use strict";
 
-  function RestangularConfig(RestangularProvider) {
-    RestangularProvider.setBaseUrl("/api/v1/");
-    RestangularProvider.setRequestSuffix("/");
-    RestangularProvider.setDefaultHttpFields({
-      xsrfHeaderName: "X-CSRFToken",
-      xsrfCookieName: "csrftoken"
-    });
+  function HttpConfig($httpProvider) {
+    $httpProvider.defaults.xsrfHeaderName = "X-CSRFToken";
+    $httpProvider.defaults.xsrfCookieName = "csrftoken";
   }
 
   function UiRouterConfig($stateProvider, $urlRouterProvider) {
@@ -26,6 +22,11 @@
         url: "/sign_up",
         templateUrl: "/static/views/sign_up.html",
         controller: "SignUpController"
+      })
+      .state("events", {
+        url: "/events",
+        templateUrl: "/static/views/events.html",
+        controller: "EventsController"
       });
 
     //Default state...
@@ -36,8 +37,9 @@
     $rootScope.$state = $state;
   }
 
-  angular.module("app", ["ngCookies", "restangular", "ui.router"])
-    .config(["RestangularProvider", RestangularConfig])
+  angular.module("app", ["ngCookies", "ui.router"])
+    .constant("BASE_URL", "/api/v1/")
+    .config(["$httpProvider", HttpConfig])
     .config(["$stateProvider", "$urlRouterProvider", UiRouterConfig])
     .run(["$rootScope", "$state", UiRunner]);
 
